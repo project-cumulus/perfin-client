@@ -1,5 +1,5 @@
 export interface ISubscription {
-    id: number
+    readonly id?: number
     subscription_name: string
     description: string
     currency: string
@@ -11,4 +11,5 @@ export interface ISubscription {
     discretionary: boolean
     fixed: boolean
     active: boolean
+    cancellation_url?: string
 }

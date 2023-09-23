@@ -46,3 +46,13 @@ div.subscription_table {
 h3 {
     margin-top: 0;
 }
+
+form div {
+    display: flex;
+}
+
+form div label {
+    min-width: 10em;
+    text-align: left;
+
+}

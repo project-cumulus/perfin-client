@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ISubscription } from './ISubscription';
 import "./Subscription.css";
+import NewSubForm from './NewSubForm';
 const subscriptionURL = `http://localhost:8000/subscriptions/list/`;
 
 const Subscriptions = () => {
@@ -87,6 +88,7 @@ const Subscriptions = () => {
 
     return (
         <>
+            <NewSubForm />
             <div className="subscription_table">
                 <h3>Monthly Subscriptions</h3>
                 <table>
