@@ -1,0 +1,48 @@
+table {
+    border-spacing: 0;
+    line-height: 1;
+}
+
+td {
+    border-bottom: 1px solid rgb(208, 205, 205);
+    padding: 0;
+}
+
+td.subscription_name_col {
+    padding: 0 1em;
+    text-align: left;
+
+}
+
+td.subscription_amt_col {
+    text-align: right;
+}
+
+td.subscription_icon img {
+    height: 45px;
+    width: 45px;
+}
+
+td.payment_icon img {
+    height: 35px;
+}
+
+tr {
+    max-height: 45px;
+}
+
+tr.subscription_row:hover td {
+    background-color: rgb(210, 211, 211);
+}
+
+div.subscription_table {
+    border: 1px solid rgb(210, 210, 210);
+    border-radius: 10px;
+    padding: 1em;
+    margin: 2em;
+    width: 50em;
+}
+
+h3 {
+    margin-top: 0;
+}
