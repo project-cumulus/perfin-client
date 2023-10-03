@@ -1,125 +1,108 @@
-import { useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { ISubscription } from './ISubscription';
 import "./Subscription.css";
+const newSubscriptionURL = "http://localhost:8000/subscription/list/"
 
-import {
-    Formik,
-    FormikHelpers,
-    FormikProps,
-    Form,
-    Field,
-    FieldProps,
-} from 'formik';
 
 const NewSubForm: React.FC<{}> = () => {
-    const [newSubscriptionData, setNewSubscriptionData] = useState<ISubscription>({
-        subscription_name: "",
-        description: "",
-        currency: "",
-        amount_per_frequency: 0,
-        frequency: "",
-        frequency_detail: "",
-        payment_method: "",
-        category: "",
-        discretionary: true,
-        fixed: true,
-        active: true
-    });
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<ISubscription>()
 
-
-    const handleChange = (e: Event): void => {
-        console.log(e.target.value);
+    const onSubmit: SubmitHandler<ISubscription> = async (data): Promise<void> => {
+        try {
+            let request = await fetch(newSubscriptionURL, {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json",
+                },
+                body: JSON.stringify(data)
+            });
+            request = await request.json();
+            console.log(request);
+        } catch (errors) {
+            console.error(errors);
+        }
     };
 
     return (
-        <div>
-            <h3>Add New Subscription</h3>
-            <Formik
-                initialValues={newSubscriptionData}
-                onSubmit={(values, actions) => {
-                    console.log({ values, actions });
-                    alert(JSON.stringify(values, null, 2));
-                    actions.setSubmitting(false);
-                }}
+        <div id="new_subscription_form">
+            <div className="new_subscription_heading">
+                <h3>Add New Subscription</h3>
+                <button>+</button>
+            </div>
+            <form
+                onSubmit={handleSubmit(onSubmit)}
             >
-                <Form>
-                    <div>
-                        <label htmlFor="subscription_name">Service Name:</label>
-                        <Field
-                            name="subscription_name"
-                            placeholder="Name"
-                            type="text"
-                            autocomplete="off"
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="description">Description:</label>
-                        <Field
-                            name="description"
-                            placeholder="Description"
-                            autocomplete="off"
-                            type="text"
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="currency">Currency:</label>
-                        <Field
-                            name="currency"
-                            placeholder="USD"
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="frequency">Frequency:</label>
-                        <Field
-                            as="select"
-                            name="frequency"
-                        >
-                            <option value="weekly">Weekly</option>
-                            <option value="monthly" selected>Monthly</option>
-                            <option value="quarterly">Quarterly</option>
-                            <option value="yearly">Yearly</option>
-                        </Field>
-                    </div>
-                    <div>
-                        <label htmlFor="frequency_details">Frequency Details:</label>
-                        <Field
-                            id="frequency_details"
-                            name="frequency_details"
-                            placeholder="The 1st of each month"
-                            autocomplete="off"
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="payment_method">Payment Method:</label>
-                        <Field
-                            id="payment_method"
-                            as="select"
-                            name="payment_method"
-                            placeholder=""
-                            autocomplete="off"
-                        >
-                            <option value="Amex">Amex</option>
-                            <option value="Visa">Visa</option>
-                            <option value="MasterCard">MasterCard</option>
-                            <option value="Discover">Discover</option>
-                            <option value="Bank Account">Bank Account</option>
-                        </Field>
-                    </div>
-                    <div>
-                        <label htmlFor="category">Category:</label>
-                        <Field
-                            id="category"
-                            name="category"
-                            placeholder=""
-                        />
-                    </div>
-                    <div>
-                        <button type="submit">Submit</button>
-                    </div>
-                </Form>
+                <div>
+                    <label>Subscription Name</label>
+                    <input {...register("subscription_name", { required: true })} />
+                    {errors.subscription_name && <span>This field is required</span>}
+                </div>
+                <div>
+                    <label>Description</label>
+                    <input {...register("description")} />
+                </div>
+                <div>
+                    <label>Currency</label>
+                    <input defaultValue="USD" {...register("currency", { required: true })} />
+                    {errors.currency && <span>This field is required</span>}
+                </div>
+                <div>
+                    <label>Amount</label>
+                    <input defaultValue="0" {...register("amount_per_frequency", { required: true })} />
+                    {errors.amount_per_frequency && <span>This field is required</span>}
+                </div>
 
-            </Formik>
-        </div>
+                <div>
+                    <label>Frequency</label>
+                    <select defaultValue="Monthly" {...register("frequency", { required: true })}>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                        <option value="Quarterly">Quarterly</option>
+                        <option value="Yearly">Yearly</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Frequency Detail</label>
+                    <input defaultValue="" {...register("frequency_detail")} />
+                </div>
+                <div>
+                    <label>Payment Method</label>
+                    <select {...register("payment_method", { required: true })}>
+                        <option></option>
+                        <option value="Amex">Amex</option>
+                        <option value="Visa">Visa</option>
+                        <option value="MasterCard">MasterCard</option>
+                        <option value="Discover">Discover</option>
+                        <option value="Bank Account">Bank Account</option>
+                    </select>
+                    {errors.payment_method && <span>This field is required</span>}
+                </div>
+                <div>
+                    <label>Category</label>
+                    <input defaultValue="" {...register("category", { required: true })} />
+                    {errors.category && <span>This field is required</span>}
+                </div>
+                <div>
+                    <label>Discretionary</label>
+                    <input className="form_checkbox" type="checkbox" {...register("discretionary")} />
+                </div>
+                <div>
+                    <label>Fixed</label>
+                    <input className="form_checkbox" type="checkbox" {...register("fixed")} />
+                </div>
+                <div>
+                    <label>Active</label>
+                    <input className="form_checkbox" type="checkbox" checked {...register("active", { required: true })} />
+                </div>
+
+                <button>Save</button>
+
+            </form>
+        </div >
     )
 };
 

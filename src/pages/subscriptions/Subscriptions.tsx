@@ -8,9 +8,13 @@ const Subscriptions = () => {
     const [subscriptions, setSubscriptions] = useState<Array<ISubscription>>([]);
 
     const getSubscriptions = async (): Promise<void> => {
-        const response = await fetch(subscriptionURL);
-        const data = await response.json();
-        setSubscriptions(data);
+        try {
+            const response = await fetch(subscriptionURL);
+            const data = await response.json();
+            setSubscriptions(data);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     useEffect(() => {
@@ -29,13 +33,14 @@ const Subscriptions = () => {
 
             return (
                 <tr key={key} className="subscription_row">
-                    <td className="subscription_icon"><img src={iconImagePath} alt="" /></td>
+                    <td className="subscription_icon"><img src={iconImagePath} alt={sub.subscription_name} /></td>
                     <td className="subscription_name_col">{sub.subscription_name}</td>
                     <td className="subscription_amt_col">{sub.amount_per_frequency}</td>
                     <td>{sub.frequency}</td>
                     <td>{sub.category}</td>
                     <td className="payment_icon"><img src={paymentIconPath} /></td>
-                    <td>{sub.discretionary ? "X" : ""}</td>
+                    <td>{sub.discretionary ? "Link" : ""}</td>
+                    <td><button>X</button></td>
                 </tr>
             );
         });
@@ -82,6 +87,7 @@ const Subscriptions = () => {
                 <th>Category</th>
                 <th>Payment Method</th>
                 <th>Cancel</th>
+                <th>Remove</th>
             </tr>
         </thead>
     );

@@ -47,12 +47,31 @@ h3 {
     margin-top: 0;
 }
 
+div#new_subscription_form {
+    width: 50em;
+    border: 1px solid rgb(210, 210, 210);
+    margin: 2em;
+    padding: 1em;
+    border-radius: 10px;
+}
+
+div.new_subscription_heading {
+    display: flex;
+}
+
 form div {
     display: flex;
 }
 
-form div label {
+form label {
     min-width: 10em;
-    text-align: left;
+    padding: 10px 15px;
+    text-align: end;
+}
 
+form div input {
+    box-sizing: border-box;
+    padding: 10px 15px;
+    font-size: 1em;
+    min-width: 20em;
 }
