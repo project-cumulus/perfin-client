@@ -1,7 +1,7 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { ISubscription } from './ISubscription';
 import "./Subscription.css";
-const newSubscriptionURL = "http://localhost:8000/subscription/list/"
+const newSubscriptionURL = "http://localhost:8000/subscriptions/list/"
 
 
 const NewSubForm: React.FC<{}> = () => {
@@ -12,6 +12,7 @@ const NewSubForm: React.FC<{}> = () => {
     } = useForm<ISubscription>()
 
     const onSubmit: SubmitHandler<ISubscription> = async (data): Promise<void> => {
+        console.log(data);
         try {
             let request = await fetch(newSubscriptionURL, {
                 method: "POST",
@@ -38,21 +39,33 @@ const NewSubForm: React.FC<{}> = () => {
             >
                 <div>
                     <label>Subscription Name</label>
-                    <input {...register("subscription_name", { required: true })} />
+                    <input
+                        {...register("subscription_name", { required: true })}
+                        autoComplete="off"
+                    />
                     {errors.subscription_name && <span>This field is required</span>}
                 </div>
                 <div>
                     <label>Description</label>
-                    <input {...register("description")} />
+                    <input
+                        {...register("description")}
+                        autoComplete="off"
+                    />
                 </div>
                 <div>
                     <label>Currency</label>
-                    <input defaultValue="USD" {...register("currency", { required: true })} />
+                    <input
+                        defaultValue="USD" {...register("currency", { required: true })}
+                        autoComplete="off"
+                    />
                     {errors.currency && <span>This field is required</span>}
                 </div>
                 <div>
                     <label>Amount</label>
-                    <input defaultValue="0" {...register("amount_per_frequency", { required: true })} />
+                    <input
+                        defaultValue="0" {...register("amount_per_frequency", { required: true })}
+                        autoComplete="off"
+                    />
                     {errors.amount_per_frequency && <span>This field is required</span>}
                 </div>
 
@@ -83,7 +96,10 @@ const NewSubForm: React.FC<{}> = () => {
                 </div>
                 <div>
                     <label>Category</label>
-                    <input defaultValue="" {...register("category", { required: true })} />
+                    <input
+                        defaultValue="" {...register("category", { required: true })}
+                        autoComplete="off"
+                    />
                     {errors.category && <span>This field is required</span>}
                 </div>
                 <div>
