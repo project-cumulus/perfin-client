@@ -97,10 +97,18 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
                 </div>
                 <div>
                     <label>Category</label>
-                    <input
+                    <select
                         defaultValue="" {...register("category", { required: true })}
                         autoComplete="off"
-                    />
+                    >
+                        <option></option>
+                        <option>Entertainment & Media</option>
+                        <option>Transportation</option>
+                        <option>Health & Wellbeing</option>
+                        <option>Finance & Insurance</option>
+                        <option>Utilities</option>
+
+                    </select>
                     {errors.category && <span>This field is required</span>}
                 </div>
                 <div>

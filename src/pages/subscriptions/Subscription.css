@@ -76,6 +76,10 @@ form div input {
     min-width: 20em;
 }
 
+form div select {
+    min-width: 10em;
+}
+
 div.modal-dialog {
     display: flex;
     /* background-color: rgb(218, 218, 218); */
