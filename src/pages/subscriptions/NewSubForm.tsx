@@ -3,8 +3,11 @@ import { ISubscription } from './ISubscription';
 import "./Subscription.css";
 const newSubscriptionURL = "http://localhost:8000/subscriptions/list/"
 
+type Props = {
+    setShowNewSubForm: React.Dispatch<React.SetStateAction<Boolean>>
+}
 
-const NewSubForm: React.FC<{}> = () => {
+const NewSubForm = ({ setShowNewSubForm }: Props) => {
     const {
         register,
         handleSubmit,
@@ -26,14 +29,12 @@ const NewSubForm: React.FC<{}> = () => {
         } catch (errors) {
             console.error(errors);
         }
+        setShowNewSubForm(false);
     };
 
     return (
         <div id="new_subscription_form">
-            <div className="new_subscription_heading">
-                <h3>Add New Subscription</h3>
-                <button>+</button>
-            </div>
+
             <form
                 onSubmit={handleSubmit(onSubmit)}
             >
