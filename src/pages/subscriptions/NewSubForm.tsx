@@ -106,6 +106,7 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
                         <option>Transportation</option>
                         <option>Health & Wellbeing</option>
                         <option>Finance & Insurance</option>
+                        <option>Technology</option>
                         <option>Utilities</option>
 
                     </select>

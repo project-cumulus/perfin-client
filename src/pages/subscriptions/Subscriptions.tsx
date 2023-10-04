@@ -3,6 +3,7 @@ import { ISubscription } from './ISubscription';
 import "./Subscription.css";
 import Modal from 'react-bootstrap/Modal';
 import NewSubForm from './NewSubForm';
+import PieChart from './PieChart';
 const subscriptionURL = `http://localhost:8000/subscriptions/`;
 
 const Subscriptions = () => {
@@ -156,6 +157,8 @@ const Subscriptions = () => {
                     </tbody>
                 </table>
             </div>
+
+            <PieChart subscriptions={subscriptions} />
 
             <div className="subscription_table">
                 <h3>Annual Subscriptions</h3>
