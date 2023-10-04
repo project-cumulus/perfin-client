@@ -86,3 +86,17 @@ div.modal-dialog {
     /* position: absolute; */
 
 }
+
+canvas {
+    max-width: 30em;
+    max-height: 30em;
+    margin: 0 auto;
+}
+
+div#subscription-summary-pie-chart {
+    width: 50em;
+    border: 1px solid rgb(210, 210, 210);
+    margin: 2em;
+    padding: 1em;
+    border-radius: 10px;
+}
