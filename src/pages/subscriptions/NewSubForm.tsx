@@ -3,8 +3,11 @@ import { ISubscription } from './ISubscription';
 import "./Subscription.css";
 const newSubscriptionURL = "http://localhost:8000/subscriptions/list/"
 
+type Props = {
+    setShowNewSubForm: React.Dispatch<React.SetStateAction<Boolean>>
+}
 
-const NewSubForm: React.FC<{}> = () => {
+const NewSubForm = ({ setShowNewSubForm }: Props) => {
     const {
         register,
         handleSubmit,
@@ -26,14 +29,12 @@ const NewSubForm: React.FC<{}> = () => {
         } catch (errors) {
             console.error(errors);
         }
+        setShowNewSubForm(false);
     };
 
     return (
         <div id="new_subscription_form">
-            <div className="new_subscription_heading">
-                <h3>Add New Subscription</h3>
-                <button>+</button>
-            </div>
+
             <form
                 onSubmit={handleSubmit(onSubmit)}
             >
@@ -96,10 +97,18 @@ const NewSubForm: React.FC<{}> = () => {
                 </div>
                 <div>
                     <label>Category</label>
-                    <input
+                    <select
                         defaultValue="" {...register("category", { required: true })}
                         autoComplete="off"
-                    />
+                    >
+                        <option></option>
+                        <option>Entertainment & Media</option>
+                        <option>Transportation</option>
+                        <option>Health & Wellbeing</option>
+                        <option>Finance & Insurance</option>
+                        <option>Utilities</option>
+
+                    </select>
                     {errors.category && <span>This field is required</span>}
                 </div>
                 <div>

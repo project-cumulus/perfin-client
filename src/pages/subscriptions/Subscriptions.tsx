@@ -7,7 +7,8 @@ const subscriptionURL = `http://localhost:8000/subscriptions/`;
 
 const Subscriptions = () => {
     const [subscriptions, setSubscriptions] = useState<Array<ISubscription>>([]);
-    const [isOpen, setIsOpen] = useState<Boolean>(false);
+    const [showNewSubForm, setShowNewSubForm] = useState<Boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean | undefined>(false);
     const [subIDtoDelete, setSubIDtoDelete] = useState<Number>(-1);
     const handleClose = () => setIsOpen(false);
     const handleOpen = () => setIsOpen(true);
@@ -32,7 +33,6 @@ const Subscriptions = () => {
         } catch (error) {
             console.error(error);
         }
-
         setSubIDtoDelete(-1);
         handleClose();
         getSubscriptions();
@@ -138,7 +138,15 @@ const Subscriptions = () => {
                 </Modal>
             </div>
 
-            <NewSubForm />
+            <div className="new_subscription_heading">
+                <h3>Add New Subscription</h3>
+                <button onClick={() => setShowNewSubForm(!showNewSubForm)}>
+                    {showNewSubForm ? "-" : "+"}
+                </button>
+            </div>
+            {showNewSubForm && <NewSubForm
+                setShowNewSubForm={setShowNewSubForm}
+            />}
             <div className="subscription_table">
                 <h3>Monthly Subscriptions</h3>
                 <table>
