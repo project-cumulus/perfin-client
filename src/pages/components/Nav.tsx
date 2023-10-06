@@ -1,11 +1,14 @@
 import './Nav.css';
+const logoPath = './src/assets/logos/perfin-logo.png';
 
 const Nav = () => {
     return (
         <div>
             <nav>
-                <img src="" alt="nav icon" />
-                <h3>PerFinApp</h3>
+                <div className="nav-bar-left">
+                    <img className="nav-bar-icon" src={logoPath} alt="nav icon" />
+                    <h2>PerFinApp</h2>
+                </div>
                 <ul>
                     <li>Wealth</li>
                     <li>Subscriptions</li>
