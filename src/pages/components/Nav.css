@@ -7,9 +7,10 @@ nav {
     color: white;
 }
 
-nav>h3 {
-    padding-right: 25em;
+nav div h2 {
+    padding: 0 0 0 1em;
     margin: auto 0;
+    font-size: 1.5em;
 }
 
 nav>ul {
@@ -22,4 +23,12 @@ nav ul li {
     padding: 0 1em;
     list-style-type: none;
 
+}
+
+img.nav-bar-icon {
+    height: 4em;
+}
+
+div.nav-bar-left {
+    display: flex;
 }
