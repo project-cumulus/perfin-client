@@ -1,26 +1,19 @@
+import { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { ISubscription } from './ISubscription';
-import "./Subscription.css";
-import { useState } from 'react';
-import { _decimalPlaces } from 'chart.js/helpers';
-const newSubscriptionURL = "http://localhost:8000/subscriptions/list/";
-const baseSearchURL = "https://www.googleapis.com/customsearch/v1";
-const googleCX = import.meta.env.VITE_GOOGLE_CX;
-const apiKEY = import.meta.env.VITE_GOOGLE_API_KEY;
+const editSubscriptionURL = "http://localhost:8000/subscriptions";
 
 type Props = {
-    setShowNewSubForm?: React.Dispatch<React.SetStateAction<boolean>>
-};
-
-interface IResult {
-    displayLink: string
+    subscriptionToEdit?: ISubscription | undefined
+    getSubscriptions: () => void
+    handleEditModalClose: () => void
 }
 
-const NewSubForm = ({ setShowNewSubForm }: Props) => {
+const EditSubForm = ({ subscriptionToEdit, getSubscriptions, handleEditModalClose }: Props) => {
+
     const {
         register,
         handleSubmit,
-        getValues,
         setValue,
         formState: { errors },
     } = useForm<ISubscription>();
@@ -33,44 +26,38 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
         );
     });
 
-    const [showResults, setShowResults] = useState<boolean>(false);
-    const [searchResults, setSearchResults] = useState<Array<IResult>>([]);
+    if (!subscriptionToEdit) return;
+    const { id, subscription_name,
+        description,
+        currency,
+        amount_per_frequency,
+        payment_method,
+        frequency,
+        frequency_detail,
+        category,
+        discretionary, fixed, active, company_logo_url
+    } = subscriptionToEdit;
 
-    const findCompany = async (): Promise<void> => {
-        const searchQuery = getValues("subscription_name")
-        try {
-            let request = await fetch(`${baseSearchURL}?q=${searchQuery}&cx=${googleCX}&key=${apiKEY}`);
-            if (request.ok) {
-                const data = await request.json();
-                console.log(data);
-                setSearchResults(data.items);
-                setShowResults(true);
-            };
-        } catch (error) {
-            console.error(error);
-        };
-    };
-
-    const renderSearchResults = searchResults.slice(0, 5).map((result, i) => {
-        const imagePath = `https://logo.clearbit.com/${result.displayLink}`;
-        return (
-            <div className="search-result-row" key={i} onClick={() => selectCompany(imagePath)}>
-                <img className="search-results-logo" src={imagePath} />
-                <p className="search-results-url">{result.displayLink}</p>
-            </div>
-        );
-    });
-
-    const selectCompany = (imagePath: string) => {
-        setValue("company_logo_url", imagePath);
-        setShowResults(false);
-    };
+    useEffect(() => {
+        setValue('subscription_name', subscription_name);
+        setValue('description', description);
+        setValue('currency', currency);
+        setValue('company_logo_url', company_logo_url)
+        setValue('amount_per_frequency', amount_per_frequency);
+        setValue('payment_method', payment_method);
+        setValue('frequency', frequency);
+        setValue('frequency_detail', frequency_detail);
+        setValue('category', category);
+        setValue('discretionary', discretionary);
+        setValue('fixed', fixed)
+        setValue('active', active)
+    }, [subscriptionToEdit]);
 
     const onSubmit: SubmitHandler<ISubscription> = async (data): Promise<void> => {
         setErrorMessages([]);
         try {
-            let request = await fetch(newSubscriptionURL, {
-                method: "POST",
+            let request = await fetch(`${editSubscriptionURL}/${id}`, {
+                method: "PATCH",
                 headers: {
                     "content-type": "application/json",
                 },
@@ -79,9 +66,11 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
 
             if (request.ok) {
                 request = await request.json();
-                console.log('successfully added new subscription!');
-                setShowNewSubForm(false);
-                console.log(request)
+                console.log('Changes to subscription successfully saved!');
+
+                console.log(request);
+                handleEditModalClose();
+                getSubscriptions();
             } else {
                 request = await request.json();
                 console.error(request);
@@ -93,36 +82,25 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
     };
 
     return (
-        <div id="new_subscription_form">
-
+        <div id="edit_subscription_form">
             <form
                 onSubmit={handleSubmit(onSubmit)}
             >
-                {getValues("company_logo_url") && <img className="selected-logo" src={getValues("company_logo_url") || ""} alt="" />}
                 <div>
                     <label>Subscription Name</label>
-
                     <input
                         {...register("subscription_name", { required: true })}
                         autoComplete="off"
                     />
-                    <button onClick={findCompany}>Find</button>
-
-
                     {errors.subscription_name && <span>This field is required</span>}
                 </div>
-                {showResults && <div className="search-results-dropdown">
-                    {renderSearchResults}
-                </div>}
                 <div>
                     <label>Company Logo</label>
                     <input
                         {...register("company_logo_url")}
                         autoComplete="off"
-
                     />
                 </div>
-                {/* } */}
                 <div>
                     <label>Description</label>
                     <input
@@ -208,7 +186,7 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
             </form>
 
         </div >
-    )
+    );
 };
 
-export default NewSubForm;
+export default EditSubForm;

@@ -4,15 +4,28 @@ import "./Subscription.css";
 import NewSubForm from './NewSubForm';
 import PieChart from './PieChart';
 import RemoveSubModal from './RemoveSubModal';
+import EditSubModal from './EditSubModal';
 const subscriptionURL = `http://localhost:8000/subscriptions/`;
 
 const Subscriptions = () => {
     const [subscriptions, setSubscriptions] = useState<Array<ISubscription>>([]);
-    const [showNewSubForm, setShowNewSubForm] = useState<Boolean>(false);
+    const [showNewSubForm, setShowNewSubForm] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean | undefined>(false);
     const [subIDtoDelete, setSubIDtoDelete] = useState<number>(-1);
     const handleClose = () => setIsOpen(false);
     const handleOpen = () => setIsOpen(true);
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState<boolean | undefined>(false);
+    const handleEditModalOpen = (sub: ISubscription) => {
+        setIsEditModalOpen(true);
+        if (!sub) {
+            console.error('subscription not defined')
+        } else {
+            setSubscriptionToEdit(sub);
+        }
+    };
+    const handleEditModalClose = () => setIsEditModalOpen(false);
+    const [subscriptionToEdit, setSubscriptionToEdit] = useState<ISubscription | undefined>();
 
     const getSubscriptions = async (): Promise<void> => {
         try {
@@ -49,8 +62,6 @@ const Subscriptions = () => {
         getSubscriptions();
     }, []);
 
-    const editIcon = <img className="edit-subscription-icon" src="./src/assets/edit_icon.png" alt="edit icon" />
-
     const renderMonthlySubscriptions = subscriptions?.filter((sub: ISubscription) => {
         return sub.active && sub.frequency === "Monthly";
     })
@@ -59,7 +70,7 @@ const Subscriptions = () => {
         })
         .map((sub: ISubscription) => {
             const paymentIconPath = `./src/assets/payments/${sub.payment_method.toLowerCase().replaceAll(" ", "_")}.png`;
-            const { id, subscription_name, amount_per_frequency, frequency, category, discretionary, company_logo_url } = sub;
+            const { id, subscription_name, amount_per_frequency, frequency, category, company_logo_url } = sub;
 
             return (
                 <tr key={id} className="subscription_row">
@@ -69,7 +80,12 @@ const Subscriptions = () => {
                     <td>{frequency}</td>
                     <td>{category}</td>
                     <td className="payment_icon"><img src={paymentIconPath} /></td>
-                    <td>{discretionary ? editIcon : null}</td>
+                    <td><img
+                        className="edit-subscription-icon"
+                        src="./src/assets/edit_icon.png"
+                        alt="edit icon"
+                        onClick={() => handleEditModalOpen(sub)}
+                    /></td>
                     <td><button onClick={() => handleDelete(id || -1)}>X</button></td>
                 </tr>
             );
@@ -131,6 +147,15 @@ const Subscriptions = () => {
                         handleClose={handleClose}
                         processDelete={processDelete}
                         subIDtoDelete={subIDtoDelete}
+                    />
+                </div>
+
+                <div>
+                    <EditSubModal
+                        getSubscriptions={getSubscriptions}
+                        show={isEditModalOpen}
+                        handleEditModalClose={handleEditModalClose}
+                        subscriptionToEdit={subscriptionToEdit}
                     />
                 </div>
 

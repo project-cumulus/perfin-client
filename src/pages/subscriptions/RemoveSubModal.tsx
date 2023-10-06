@@ -13,7 +13,6 @@ const RemoveSubModal: React.FC<RemoveSubModalProps> = ({ show, handleClose, proc
     return (
         <Modal
             show={show}
-
             onHide={handleClose}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
