@@ -114,14 +114,15 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
                 <div className="search-results-dropdown">
                     {showResults && renderSearchResults}
                 </div>
-                <div>
+
+                {getValues("company_logo") && <div>
                     <label>Company Logo</label>
                     <input
                         {...register("company_logo")}
                         autoComplete="off"
                         disabled
                     />
-                </div>
+                </div>}
                 <div>
                     <label>Description</label>
                     <input
@@ -205,6 +206,7 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
                 <button>Save</button>
 
             </form>
+
         </div >
     )
 };
