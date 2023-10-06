@@ -1,21 +1,30 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { ISubscription } from './ISubscription';
 import "./Subscription.css";
-const newSubscriptionURL = "http://localhost:8000/subscriptions/list/"
+import { useState } from 'react';
+const newSubscriptionURL = "http://localhost:8000/subscriptions/list/";
 
 type Props = {
     setShowNewSubForm: React.Dispatch<React.SetStateAction<Boolean>>
-}
+};
 
 const NewSubForm = ({ setShowNewSubForm }: Props) => {
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<ISubscription>()
+    } = useForm<ISubscription>();
+
+    const [errorMessages, setErrorMessages] = useState<Array<[string]>>();
+
+    const renderErrorMessages = errorMessages?.map((errMsg, i) => {
+        return (
+            <p className="error_messages" key={i}>{errMsg.join("")}</p>
+        );
+    });
 
     const onSubmit: SubmitHandler<ISubscription> = async (data): Promise<void> => {
-        console.log(data);
+        setErrorMessages([]);
         try {
             let request = await fetch(newSubscriptionURL, {
                 method: "POST",
@@ -24,12 +33,20 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
                 },
                 body: JSON.stringify(data)
             });
-            request = await request.json();
-            console.log(request);
+
+            if (request.ok) {
+                request = await request.json();
+                console.log('successfully added new subscription!');
+                setShowNewSubForm(false);
+            } else {
+                console.error(request);
+                setErrorMessages(Object.values(request));
+            }
+
         } catch (errors) {
             console.error(errors);
         }
-        setShowNewSubForm(false);
+
     };
 
     return (
@@ -124,6 +141,7 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
                     <label>Active</label>
                     <input className="form_checkbox" type="checkbox" checked {...register("active", { required: true })} />
                 </div>
+                {errorMessages && errorMessages.length && renderErrorMessages}
 
                 <button>Save</button>
 

@@ -10,24 +10,26 @@ type Props = {
 };
 
 const PieChart = ({ subscriptions }: Props) => {
-    const subCostByCategory = {};
+    const subCostByCategory: {
+        [key: string]: number
+    } = {};
+
     if (!subscriptions) return;
     for (const subscription of subscriptions) {
-        if (!subscription.active || subscription.frequency !== "Monthly") continue;
-        if (subscription.category in subCostByCategory) {
-            subCostByCategory[subscription.category] += Number(subscription.amount_per_frequency);
+        const { active, frequency, category, amount_per_frequency } = subscription;
+        if (!active || frequency !== "Monthly") continue;
+        if (category in subCostByCategory) {
+            subCostByCategory[category] += Number(amount_per_frequency);
         } else {
-            subCostByCategory[subscription.category] = Number(subscription.amount_per_frequency);
+            subCostByCategory[category] = Number(amount_per_frequency);
         }
     };
 
     const costByCategory: Array<[string, number]> = Object.entries(subCostByCategory);
-
     const sortedCostByCategory = costByCategory.sort((a: [string, number], b: [string, number]): number => b[1] - a[1]);
 
     const pieChartData = sortedCostByCategory.map(el => el[1]);
     const pieChartLabels = sortedCostByCategory.map(el => el[0]);
-
 
     const data = {
         labels: pieChartLabels,
