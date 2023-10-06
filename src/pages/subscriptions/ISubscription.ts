@@ -12,5 +12,5 @@ export interface ISubscription {
     fixed: boolean
     active: boolean
     cancellation_url?: string
-    company_logo: string
+    company_logo_url: string
 }
