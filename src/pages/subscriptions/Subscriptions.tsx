@@ -122,65 +122,69 @@ const Subscriptions = () => {
 
     return (
         <>
-            <div className="remove_sub_modal">
-                <Modal show={isOpen} onHide={handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Warning</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Are you sure you want to remove? This cannot be undone</Modal.Body>
-                    <Modal.Footer>
-                        <button onClick={handleClose}>
-                            Go Back
-                        </button>
-                        <button onClick={() => processDelete(subIDtoDelete)}>
-                            Delete
-                        </button>
-                    </Modal.Footer>
-                </Modal>
+            <div id="main_subscription_page">
+                <div className="remove_sub_modal">
+                    <Modal show={isOpen} onHide={handleClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Warning</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>Are you sure you want to remove? This cannot be undone</Modal.Body>
+                        <Modal.Footer>
+                            <button onClick={handleClose}>
+                                Go Back
+                            </button>
+                            <button onClick={() => processDelete(subIDtoDelete)}>
+                                Delete
+                            </button>
+                        </Modal.Footer>
+                    </Modal>
+                </div>
+
+                <div className="new_subscription_heading">
+                    <h3>Add New Subscription</h3>
+                    <button onClick={() => setShowNewSubForm(!showNewSubForm)}>
+                        {showNewSubForm ? "-" : "+"}
+                    </button>
+
+                </div>
+                {showNewSubForm && <NewSubForm
+                    setShowNewSubForm={setShowNewSubForm}
+                />}
+                <PieChart subscriptions={subscriptions} />
+                <div className="subscription_table">
+                    <h3>Monthly Subscriptions</h3>
+                    <table>
+                        {subscriptionTableHeading}
+                        <tbody>
+                            {renderMonthlySubscriptions}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="subscription_table">
+                    <h3>Annual Subscriptions</h3>
+                    <table>
+                        {subscriptionTableHeading}
+                        <tbody>
+                            {renderAnnualSubscriptions}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="subscription_table">
+
+                    <h3>Cancelled Subscriptions</h3>
+                    <table>
+                        {subscriptionTableHeading}
+                        <tbody>
+                            {renderCancelledSubscriptions}
+                        </tbody>
+                    </table>
+                </div>
+
+
             </div>
 
-            <div className="new_subscription_heading">
-                <h3>Add New Subscription</h3>
-                <button onClick={() => setShowNewSubForm(!showNewSubForm)}>
-                    {showNewSubForm ? "-" : "+"}
-                </button>
-            </div>
-            {showNewSubForm && <NewSubForm
-                setShowNewSubForm={setShowNewSubForm}
-            />}
-            <div className="subscription_table">
-                <h3>Monthly Subscriptions</h3>
-                <table>
-                    {subscriptionTableHeading}
-                    <tbody>
-                        {renderMonthlySubscriptions}
-                    </tbody>
-                </table>
-            </div>
-
-            <PieChart subscriptions={subscriptions} />
-
-            <div className="subscription_table">
-                <h3>Annual Subscriptions</h3>
-                <table>
-                    {subscriptionTableHeading}
-                    <tbody>
-                        {renderAnnualSubscriptions}
-                    </tbody>
-                </table>
-            </div>
-
-            <div className="subscription_table">
-
-                <h3>Cancelled Subscriptions</h3>
-                <table>
-                    {subscriptionTableHeading}
-                    <tbody>
-                        {renderCancelledSubscriptions}
-                    </tbody>
-                </table>
-            </div>
-
+            <a href="https://clearbit.com">Logos provided by Clearbit</a>
         </>
     )
 };
