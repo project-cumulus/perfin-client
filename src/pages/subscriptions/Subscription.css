@@ -116,3 +116,32 @@ div#subscription-summary-pie-chart {
 p.error_messages {
     color: red;
 }
+
+div.search-results-dropdown {
+    display: block;
+    border: 1px solid rgb(152, 152, 152);
+    margin: 0 20em 0 12em;
+}
+
+div.search-result-row:hover {
+    background-color: rgb(94, 94, 94);
+}
+
+
+p.search-results-url {
+    display: block;
+    margin-left: 1em;
+}
+
+img.search-results-logo {
+    margin: 0.25em;
+    width: 3em;
+    height: 3em;
+    border-radius: 50%;
+}
+
+img.selected-logo {
+    height: 4em;
+    width: 4em;
+    border-radius: 50%;
+}

@@ -3,15 +3,24 @@ import { ISubscription } from './ISubscription';
 import "./Subscription.css";
 import { useState } from 'react';
 const newSubscriptionURL = "http://localhost:8000/subscriptions/list/";
+const baseSearchURL = "https://www.googleapis.com/customsearch/v1";
+const googleCX = import.meta.env.VITE_GOOGLE_CX;
+const apiKEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
 type Props = {
     setShowNewSubForm: React.Dispatch<React.SetStateAction<Boolean>>
 };
 
+interface IResult {
+    displayLink: string
+}
+
 const NewSubForm = ({ setShowNewSubForm }: Props) => {
     const {
         register,
         handleSubmit,
+        getValues,
+        setValue,
         formState: { errors },
     } = useForm<ISubscription>();
 
@@ -22,6 +31,39 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
             <p className="error_messages" key={i}>{errMsg.join("")}</p>
         );
     });
+
+    const [showResults, setShowResults] = useState<boolean>(false);
+    const [searchResults, setSearchResults] = useState<Array<IResult>>([]);
+
+    const findCompany = async (): Promise<void> => {
+        const searchQuery = getValues("subscription_name")
+        try {
+            let request = await fetch(`${baseSearchURL}?q=${searchQuery}&cx=${googleCX}&key=${apiKEY}`);
+            if (request.ok) {
+                const data = await request.json();
+                console.log(data);
+                setSearchResults(data.items);
+                setShowResults(true);
+            };
+        } catch (error) {
+            console.error(error);
+        };
+    };
+
+    const renderSearchResults = searchResults.slice(0, 5).map((result, i) => {
+        const imagePath = `https://logo.clearbit.com/${result.displayLink}`;
+        return (
+            <div className="search-result-row" onClick={() => selectCompany(imagePath)}>
+                <img className="search-results-logo" src={imagePath} />
+                <p key={i} className="search-results-url">{result.displayLink}</p>
+            </div>
+        );
+    });
+
+    const selectCompany = (imagePath: string) => {
+        setValue("company_logo", imagePath);
+        setShowResults(false);
+    };
 
     const onSubmit: SubmitHandler<ISubscription> = async (data): Promise<void> => {
         setErrorMessages([]);
@@ -56,13 +98,29 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
             <form
                 onSubmit={handleSubmit(onSubmit)}
             >
+                {getValues("company_logo") && <img className="selected-logo" src={getValues("company_logo") || ""} alt="" />}
                 <div>
                     <label>Subscription Name</label>
+
                     <input
                         {...register("subscription_name", { required: true })}
                         autoComplete="off"
                     />
+                    <button onClick={findCompany}>Find</button>
+
+
                     {errors.subscription_name && <span>This field is required</span>}
+                </div>
+                <div className="search-results-dropdown">
+                    {showResults && renderSearchResults}
+                </div>
+                <div>
+                    <label>Company Logo</label>
+                    <input
+                        {...register("company_logo")}
+                        autoComplete="off"
+                        disabled
+                    />
                 </div>
                 <div>
                     <label>Description</label>
