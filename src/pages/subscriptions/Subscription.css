@@ -57,6 +57,12 @@ div#new_subscription_form {
 
 div.new_subscription_heading {
     display: flex;
+    padding: 1em 1em 0 1em;
+    margin: 0 2em;
+}
+
+div.new_subscription_heading h3 {
+    margin: auto 0;
 }
 
 form div {
@@ -74,6 +80,12 @@ form div input {
     padding: 10px 15px;
     font-size: 1em;
     min-width: 20em;
+}
+
+form div input.form_checkbox {
+    min-width: 0;
+    width: 2.5em;
+    margin: 0;
 }
 
 form div select {
@@ -99,4 +111,8 @@ div#subscription-summary-pie-chart {
     margin: 2em;
     padding: 1em;
     border-radius: 10px;
+}
+
+p.error_messages {
+    color: red;
 }
