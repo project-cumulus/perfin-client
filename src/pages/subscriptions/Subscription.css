@@ -148,3 +148,7 @@ img.selected-logo {
     width: 4em;
     border-radius: 50%;
 }
+
+img.edit-subscription-icon {
+    height: 2em;
+}
