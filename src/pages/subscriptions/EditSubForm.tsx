@@ -177,7 +177,7 @@ const EditSubForm = ({ subscriptionToEdit, getSubscriptions, handleEditModalClos
                 </div>
                 <div>
                     <label>Active</label>
-                    <input className="form_checkbox" type="checkbox" checked {...register("active", { required: true })} />
+                    <input className="form_checkbox" type="checkbox" {...register("active")} />
                 </div>
                 {errorMessages && errorMessages.length && renderErrorMessages}
 

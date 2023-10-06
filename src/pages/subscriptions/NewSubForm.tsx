@@ -9,14 +9,15 @@ const googleCX = import.meta.env.VITE_GOOGLE_CX;
 const apiKEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
 type Props = {
-    setShowNewSubForm?: React.Dispatch<React.SetStateAction<boolean>>
+    handleHideForm: () => void
+    getSubscriptions: () => void
 };
 
 interface IResult {
     displayLink: string
 }
 
-const NewSubForm = ({ setShowNewSubForm }: Props) => {
+const NewSubForm = ({ handleHideForm, getSubscriptions }: Props) => {
     const {
         register,
         handleSubmit,
@@ -80,7 +81,8 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
             if (request.ok) {
                 request = await request.json();
                 console.log('successfully added new subscription!');
-                setShowNewSubForm(false);
+                handleHideForm();
+                getSubscriptions();
                 console.log(request)
             } else {
                 request = await request.json();

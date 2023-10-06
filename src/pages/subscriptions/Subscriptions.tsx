@@ -14,6 +14,7 @@ const Subscriptions = () => {
     const [subIDtoDelete, setSubIDtoDelete] = useState<number>(-1);
     const handleClose = () => setIsOpen(false);
     const handleOpen = () => setIsOpen(true);
+    const handleHideForm = () => setShowNewSubForm(false);
 
     const [isEditModalOpen, setIsEditModalOpen] = useState<boolean | undefined>(false);
     const handleEditModalOpen = (sub: ISubscription) => {
@@ -96,13 +97,20 @@ const Subscriptions = () => {
     })
         .map((sub: ISubscription, key: number) => {
             return (
-                <tr key={key}>
-                    <td></td>
+                <tr key={key} className="subscription_row">
+                    <td className="subscription_icon"><img src={sub.company_logo_url} /></td>
                     <td className="subscription_name_col">{sub.subscription_name}</td>
-                    <td>{sub.payment_method}</td>
                     <td className="subscription_amt_col">{sub.amount_per_frequency}</td>
                     <td>{sub.frequency}</td>
                     <td>{sub.category}</td>
+                    <td>{sub.payment_method}</td>
+                    <td><img
+                        className="edit-subscription-icon"
+                        src="./src/assets/edit_icon.png"
+                        alt="edit icon"
+                        onClick={() => handleEditModalOpen(sub)}
+                    /></td>
+                    <td><button onClick={() => handleDelete(sub.id || -1)}>X</button></td>
                 </tr>
             );
         });
@@ -112,13 +120,20 @@ const Subscriptions = () => {
     })
         .map((sub: ISubscription, key: number) => {
             return (
-                <tr key={key}>
-                    <td></td>
-                    <td>{sub.subscription_name}</td>
-                    <td>{sub.payment_method}</td>
-                    <td>{sub.amount_per_frequency}</td>
+                <tr key={key} className="subscription_row">
+                    <td className="subscription_icon"><img src={sub.company_logo_url} /></td>
+                    <td className="subscription_name_col">{sub.subscription_name}</td>
+                    <td className="subscription_amt_col">{sub.amount_per_frequency}</td>
                     <td>{sub.frequency}</td>
                     <td>{sub.category}</td>
+                    <td>{sub.payment_method}</td>
+                    <td><img
+                        className="edit-subscription-icon"
+                        src="./src/assets/edit_icon.png"
+                        alt="edit icon"
+                        onClick={() => handleEditModalOpen(sub)}
+                    /></td>
+                    <td><button onClick={() => handleDelete(sub.id || -1)}>X</button></td>
                 </tr>
             );
         });
@@ -137,6 +152,9 @@ const Subscriptions = () => {
             </tr>
         </thead>
     );
+
+    const totalMonthlySubscriptionAmount = subscriptions?.filter((sub: ISubscription) => sub.active && sub.frequency === "Monthly")
+        .reduce((acc: number, curr: ISubscription) => acc + Number(curr.amount_per_frequency), 0);
 
     return (
         <>
@@ -167,7 +185,8 @@ const Subscriptions = () => {
 
                 </div>
                 {showNewSubForm && <NewSubForm
-                    setShowNewSubForm={setShowNewSubForm}
+                    handleHideForm={handleHideForm}
+                    getSubscriptions={getSubscriptions}
                 />}
                 <PieChart subscriptions={subscriptions} />
                 <div className="subscription_table">
@@ -177,6 +196,18 @@ const Subscriptions = () => {
                         <tbody>
                             {renderMonthlySubscriptions}
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td className="subscription_amt_col">{totalMonthlySubscriptionAmount}</td>
+                                <td>Total</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
                 <div className="subscription_table">

@@ -23,6 +23,7 @@ td.subscription_amt_col {
 }
 
 td.subscription_icon img {
+    margin: 2px;
     height: 45px;
     width: 45px;
 }
@@ -37,6 +38,10 @@ tr {
 
 tr.subscription_row:hover td {
     background-color: rgb(210, 211, 211);
+}
+
+tfoot tr {
+    border-top: 1px solid rgb(210, 210, 210);
 }
 
 div.subscription_table {
