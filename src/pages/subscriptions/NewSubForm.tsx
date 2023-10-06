@@ -35,10 +35,11 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
             });
 
             if (request.ok) {
-                request = await request.json();
+                // request = await request.json();
                 console.log('successfully added new subscription!');
                 setShowNewSubForm(false);
             } else {
+                request = await request.json();
                 console.error(request);
                 setErrorMessages(Object.values(request));
             }
