@@ -1,18 +1,31 @@
 import { useState, useEffect } from 'react';
 import { ISubscription } from './ISubscription';
 import "./Subscription.css";
-import Modal from 'react-bootstrap/Modal';
 import NewSubForm from './NewSubForm';
 import PieChart from './PieChart';
+import RemoveSubModal from './RemoveSubModal';
+import EditSubModal from './EditSubModal';
 const subscriptionURL = `http://localhost:8000/subscriptions/`;
 
 const Subscriptions = () => {
     const [subscriptions, setSubscriptions] = useState<Array<ISubscription>>([]);
-    const [showNewSubForm, setShowNewSubForm] = useState<Boolean>(false);
+    const [showNewSubForm, setShowNewSubForm] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean | undefined>(false);
-    const [subIDtoDelete, setSubIDtoDelete] = useState<Number>(-1);
+    const [subIDtoDelete, setSubIDtoDelete] = useState<number>(-1);
     const handleClose = () => setIsOpen(false);
     const handleOpen = () => setIsOpen(true);
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState<boolean | undefined>(false);
+    const handleEditModalOpen = (sub: ISubscription) => {
+        setIsEditModalOpen(true);
+        if (!sub) {
+            console.error('subscription not defined')
+        } else {
+            setSubscriptionToEdit(sub);
+        }
+    };
+    const handleEditModalClose = () => setIsEditModalOpen(false);
+    const [subscriptionToEdit, setSubscriptionToEdit] = useState<ISubscription | undefined>();
 
     const getSubscriptions = async (): Promise<void> => {
         try {
@@ -24,7 +37,7 @@ const Subscriptions = () => {
         }
     };
 
-    const processDelete = async (sub_id: Number | undefined): Promise<void> => {
+    const processDelete = async (sub_id: number | undefined): Promise<void> => {
         if (!sub_id || sub_id === -1) return;
 
         try {
@@ -39,11 +52,11 @@ const Subscriptions = () => {
         getSubscriptions();
     };
 
-    const handleDelete = (sub_id: Number): void => {
+    const handleDelete = (sub_id: number): void => {
         if (!sub_id || sub_id === -1) return;
         handleOpen();
         setSubIDtoDelete(sub_id);
-    }
+    };
 
     useEffect(() => {
         getSubscriptions();
@@ -57,7 +70,7 @@ const Subscriptions = () => {
         })
         .map((sub: ISubscription) => {
             const paymentIconPath = `./src/assets/payments/${sub.payment_method.toLowerCase().replaceAll(" ", "_")}.png`;
-            const { id, subscription_name, amount_per_frequency, frequency, category, discretionary, company_logo_url } = sub;
+            const { id, subscription_name, amount_per_frequency, frequency, category, company_logo_url } = sub;
 
             return (
                 <tr key={id} className="subscription_row">
@@ -67,7 +80,12 @@ const Subscriptions = () => {
                     <td>{frequency}</td>
                     <td>{category}</td>
                     <td className="payment_icon"><img src={paymentIconPath} /></td>
-                    <td>{discretionary ? "Edit" : null}</td>
+                    <td><img
+                        className="edit-subscription-icon"
+                        src="./src/assets/edit_icon.png"
+                        alt="edit icon"
+                        onClick={() => handleEditModalOpen(sub)}
+                    /></td>
                     <td><button onClick={() => handleDelete(id || -1)}>X</button></td>
                 </tr>
             );
@@ -123,21 +141,22 @@ const Subscriptions = () => {
     return (
         <>
             <div id="main_subscription_page">
-                <div className="remove_sub_modal">
-                    <Modal show={isOpen} onHide={handleClose}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Warning</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>Are you sure you want to remove? This cannot be undone</Modal.Body>
-                        <Modal.Footer>
-                            <button onClick={handleClose}>
-                                Go Back
-                            </button>
-                            <button onClick={() => processDelete(subIDtoDelete)}>
-                                Delete
-                            </button>
-                        </Modal.Footer>
-                    </Modal>
+                <div >
+                    <RemoveSubModal
+                        show={isOpen}
+                        handleClose={handleClose}
+                        processDelete={processDelete}
+                        subIDtoDelete={subIDtoDelete}
+                    />
+                </div>
+
+                <div>
+                    <EditSubModal
+                        getSubscriptions={getSubscriptions}
+                        show={isEditModalOpen}
+                        handleEditModalClose={handleEditModalClose}
+                        subscriptionToEdit={subscriptionToEdit}
+                    />
                 </div>
 
                 <div className="new_subscription_heading">

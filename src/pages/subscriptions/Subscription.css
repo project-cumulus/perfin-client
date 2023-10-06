@@ -73,7 +73,7 @@ form div {
 }
 
 form label {
-    min-width: 10em;
+    min-width: 12em;
     padding: 10px 15px;
     text-align: end;
 }
@@ -93,13 +93,7 @@ form div input.form_checkbox {
 
 form div select {
     min-width: 10em;
-}
-
-div.modal-dialog {
-    display: flex;
-    /* background-color: rgb(218, 218, 218); */
-    /* position: absolute; */
-
+    padding: 10px 15px;
 }
 
 canvas {
@@ -121,6 +115,7 @@ p.error_messages {
 }
 
 div.search-results-dropdown {
+    box-sizing: border-box;
     display: block;
     border: 1px solid rgb(152, 152, 152);
     margin: 0 20em 0 12em;
@@ -147,4 +142,16 @@ img.selected-logo {
     height: 4em;
     width: 4em;
     border-radius: 50%;
+}
+
+img.edit-subscription-icon {
+    height: 2em;
+}
+
+img.edit-subscription-icon:hover {
+    background-color: bisque;
+}
+
+div#edit_subscription_form div {
+    max-width: 40em;
 }
