@@ -56,19 +56,19 @@ const Subscriptions = () => {
             return b.amount_per_frequency - a.amount_per_frequency;
         })
         .map((sub: ISubscription) => {
-            const iconImagePath = `./src/assets/logos/${sub.subscription_name.toLowerCase().replaceAll(" ", "_")}.png`;
             const paymentIconPath = `./src/assets/payments/${sub.payment_method.toLowerCase().replaceAll(" ", "_")}.png`;
+            const { id, subscription_name, amount_per_frequency, frequency, category, discretionary, company_logo_url } = sub;
 
             return (
-                <tr key={sub.id} className="subscription_row">
-                    <td className="subscription_icon"><img src={iconImagePath} alt={sub.subscription_name} /></td>
-                    <td className="subscription_name_col">{sub.subscription_name}</td>
-                    <td className="subscription_amt_col">{sub.amount_per_frequency}</td>
-                    <td>{sub.frequency}</td>
-                    <td>{sub.category}</td>
+                <tr key={id} className="subscription_row">
+                    <td className="subscription_icon"><img src={company_logo_url} alt={subscription_name} /></td>
+                    <td className="subscription_name_col">{subscription_name}</td>
+                    <td className="subscription_amt_col">{amount_per_frequency}</td>
+                    <td>{frequency}</td>
+                    <td>{category}</td>
                     <td className="payment_icon"><img src={paymentIconPath} /></td>
-                    <td>{sub.discretionary ? "Link" : null}</td>
-                    <td><button onClick={() => handleDelete(sub.id || -1)}>X</button></td>
+                    <td>{discretionary ? "Edit" : null}</td>
+                    <td><button onClick={() => handleDelete(id || -1)}>X</button></td>
                 </tr>
             );
         });
@@ -114,7 +114,7 @@ const Subscriptions = () => {
                 <th>Frequency</th>
                 <th>Category</th>
                 <th>Payment Method</th>
-                <th>Cancel</th>
+                <th>Edit</th>
                 <th>Remove</th>
             </tr>
         </thead>

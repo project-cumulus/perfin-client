@@ -53,15 +53,15 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
     const renderSearchResults = searchResults.slice(0, 5).map((result, i) => {
         const imagePath = `https://logo.clearbit.com/${result.displayLink}`;
         return (
-            <div className="search-result-row" onClick={() => selectCompany(imagePath)}>
+            <div className="search-result-row" key={i} onClick={() => selectCompany(imagePath)}>
                 <img className="search-results-logo" src={imagePath} />
-                <p key={i} className="search-results-url">{result.displayLink}</p>
+                <p className="search-results-url">{result.displayLink}</p>
             </div>
         );
     });
 
     const selectCompany = (imagePath: string) => {
-        setValue("company_logo", imagePath);
+        setValue("company_logo_url", imagePath);
         setShowResults(false);
     };
 
@@ -77,9 +77,10 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
             });
 
             if (request.ok) {
-                // request = await request.json();
+                request = await request.json();
                 console.log('successfully added new subscription!');
                 setShowNewSubForm(false);
+                console.log(request)
             } else {
                 request = await request.json();
                 console.error(request);
@@ -98,7 +99,7 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
             <form
                 onSubmit={handleSubmit(onSubmit)}
             >
-                {getValues("company_logo") && <img className="selected-logo" src={getValues("company_logo") || ""} alt="" />}
+                {getValues("company_logo_url") && <img className="selected-logo" src={getValues("company_logo_url") || ""} alt="" />}
                 <div>
                     <label>Subscription Name</label>
 
@@ -115,10 +116,10 @@ const NewSubForm = ({ setShowNewSubForm }: Props) => {
                     {showResults && renderSearchResults}
                 </div>
 
-                {getValues("company_logo") && <div>
+                {getValues("company_logo_url") && <div>
                     <label>Company Logo</label>
                     <input
-                        {...register("company_logo")}
+                        {...register("company_logo_url")}
                         autoComplete="off"
                         disabled
                     />
