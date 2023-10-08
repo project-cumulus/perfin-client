@@ -1,3 +1,11 @@
+export interface ITransaction {
+    readonly id?: number
+    amount: number
+    currency: string
+    date_paid: string
+    subscription: number
+}
+
 export interface ISubscription {
     readonly id?: number
     subscription_name: string
@@ -13,4 +21,5 @@ export interface ISubscription {
     active: boolean
     cancellation_url?: string
     company_logo_url: string
+    transaction_history: Array<ITransaction>
 }

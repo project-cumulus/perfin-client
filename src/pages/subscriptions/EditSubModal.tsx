@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { ISubscription } from './ISubscription';
+import { ISubscription } from '../../types';
 import EditSubForm from './EditSubForm';
 import './Subscription.css'
 

@@ -37,7 +37,7 @@ tr {
 }
 
 tr.subscription_row:hover td {
-    background-color: rgb(210, 211, 211);
+    background-color: rgb(210, 210, 210);
 }
 
 tfoot tr {

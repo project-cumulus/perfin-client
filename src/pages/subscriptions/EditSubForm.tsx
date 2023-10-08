@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { ISubscription } from './ISubscription';
+import { ISubscription } from '../../types';
 const editSubscriptionURL = "http://localhost:8000/subscriptions";
 
 type Props = {
