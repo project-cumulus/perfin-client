@@ -1,5 +1,5 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { ISubscription } from './ISubscription';
+import { ISubscription } from '../../types';
 import "./Subscription.css";
 import { useState } from 'react';
 import { _decimalPlaces } from 'chart.js/helpers';

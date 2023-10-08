@@ -1,6 +1,6 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
-import { ISubscription } from './ISubscription';
+import { ISubscription } from '../../types';
 import "./Subscription.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
