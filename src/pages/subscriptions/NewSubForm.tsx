@@ -3,7 +3,7 @@ import { ISubscription } from '../../types';
 import "./Subscription.css";
 import { useState } from 'react';
 import { _decimalPlaces } from 'chart.js/helpers';
-const newSubscriptionURL = "http://localhost:8000/subscriptions/list/";
+const newSubscriptionURL = "http://localhost:8000/cumulus/subscriptions/";
 const baseSearchURL = "https://www.googleapis.com/customsearch/v1";
 const googleCX = import.meta.env.VITE_GOOGLE_CX;
 const apiKEY = import.meta.env.VITE_GOOGLE_API_KEY;

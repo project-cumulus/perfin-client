@@ -1,6 +1,7 @@
 import Subscriptions from "../subscriptions/Subscriptions";
 
 import Nav from "../components/Nav";
+import Transactions from "../budget/Transactions";
 
 const Landing = () => {
 
@@ -8,6 +9,7 @@ const Landing = () => {
         <>
             <Nav />
             <Subscriptions />
+            <Transactions />
         </>
     )
 };

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { ISubscription } from '../../types';
-const editSubscriptionURL = "http://localhost:8000/subscriptions";
+const editSubscriptionURL = "http://localhost:8000/cumulus/subscriptions/";
 
 type Props = {
     subscriptionToEdit?: ISubscription | undefined
@@ -56,7 +56,7 @@ const EditSubForm = ({ subscriptionToEdit, getSubscriptions, handleEditModalClos
     const onSubmit: SubmitHandler<ISubscription> = async (data): Promise<void> => {
         setErrorMessages([]);
         try {
-            let request = await fetch(`${editSubscriptionURL}/${id}`, {
+            let request = await fetch(`${editSubscriptionURL}${id}`, {
                 method: "PATCH",
                 headers: {
                     "content-type": "application/json",
