@@ -5,7 +5,7 @@ import NewSubForm from './NewSubForm';
 import PieChart from './PieChart';
 import RemoveSubModal from './RemoveSubModal';
 import EditSubModal from './EditSubModal';
-const subscriptionURL = `http://localhost:8000/subscriptions/`;
+const subscriptionURL = `http://localhost:8000/cumulus/subscriptions/`;
 
 const Subscriptions = () => {
     const [subscriptions, setSubscriptions] = useState<Array<ISubscription>>([]);
@@ -35,7 +35,7 @@ const Subscriptions = () => {
 
     const getSubscriptions = async (): Promise<void> => {
         try {
-            const response = await fetch(`${subscriptionURL}list/`);
+            const response = await fetch(`${subscriptionURL}`);
             const data = await response.json();
             setSubscriptions(data);
         } catch (error) {
