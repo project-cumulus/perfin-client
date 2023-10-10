@@ -23,3 +23,19 @@ export interface ISubscription {
     company_logo_url: string
     transaction_history: Array<ITransaction>
 }
+
+export interface ITransaction {
+    readonly id?: number
+    details: string | undefined
+    currency: string
+    date: string
+    description: string
+    payee: string | undefined
+    payor: string | undefined
+    category: string | undefined
+    amount: number
+    type: string
+    balance: number | undefined
+    isRecurring: boolean
+    account_id_id: number
+}
