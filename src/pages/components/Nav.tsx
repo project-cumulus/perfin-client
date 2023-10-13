@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './Nav.css';
 const logoPath = './src/assets/logos/perfin-logo.png';
 
@@ -10,9 +11,10 @@ const Nav = () => {
                     <h2>PerFinApp</h2>
                 </div>
                 <ul>
-                    <li>Wealth</li>
-                    <li>Subscriptions</li>
-                    <li>Budget</li>
+                    <Link to="/investments">Investments</Link>
+                    <Link to="/wealth">Wealth</Link>
+                    <Link to="/subscriptions">Subscriptions</Link>
+                    <Link to="/budget">Budget</Link>
                 </ul>
             </nav>
         </div>

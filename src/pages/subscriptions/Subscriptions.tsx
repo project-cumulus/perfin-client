@@ -168,7 +168,7 @@ const Subscriptions = () => {
     );
 
     const totalMonthlySubscriptionAmount = subscriptions?.filter((sub: ISubscription) => sub.active && sub.frequency === "Monthly")
-        .reduce((acc: number, curr: ISubscription) => acc + Number(curr.amount_per_frequency), 0);
+        .reduce((acc: number, curr: ISubscription) => acc + Number(curr.amount_per_frequency), 0).toFixed(2);
 
     const subscriptionTransactionHistory = selectedSubscription?.transaction_history.map((transaction: ITransaction, i: number) => {
         const { amount, currency, date_paid } = transaction;
