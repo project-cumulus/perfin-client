@@ -239,12 +239,14 @@ const Subscriptions = () => {
 
                 {selectedSubscription && <div className="subscription_table">
                     <h3>Transaction History</h3>
-                    <thead>
-                        <th>Date</th>
-                        <th>CCY</th>
-                        <th>Amount</th>
-                    </thead>
                     <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>CCY</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             {subscriptionTransactionHistory}
                         </tbody>
