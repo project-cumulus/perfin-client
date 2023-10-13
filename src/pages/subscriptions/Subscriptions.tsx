@@ -168,7 +168,7 @@ const Subscriptions = () => {
     );
 
     const totalMonthlySubscriptionAmount = subscriptions?.filter((sub: ISubscription) => sub.active && sub.frequency === "Monthly")
-        .reduce((acc: number, curr: ISubscription) => acc + Number(curr.amount_per_frequency), 0);
+        .reduce((acc: number, curr: ISubscription) => acc + Number(curr.amount_per_frequency), 0).toFixed(2);
 
     const subscriptionTransactionHistory = selectedSubscription?.transaction_history.map((transaction: ITransaction, i: number) => {
         const { amount, currency, date_paid } = transaction;
@@ -184,7 +184,7 @@ const Subscriptions = () => {
 
     return (
         <>
-            <div id="main_subscription_page">
+            <div>
                 <div >
                     <RemoveSubModal
                         show={isOpen}
@@ -203,6 +203,8 @@ const Subscriptions = () => {
                     />
                 </div>
 
+
+
                 <div className="new_subscription_heading">
                     <h3>Add New Subscription</h3>
                     <button onClick={() => setShowNewSubForm(!showNewSubForm)}>
@@ -214,61 +216,72 @@ const Subscriptions = () => {
                     handleHideForm={handleHideForm}
                     getSubscriptions={getSubscriptions}
                 />}
-                <PieChart subscriptions={subscriptions} />
-                <div className="subscription_table">
-                    <h3>Monthly Subscriptions</h3>
-                    <table>
-                        {subscriptionTableHeading}
-                        <tbody>
-                            {renderMonthlySubscriptions}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td className="subscription_amt_col">{totalMonthlySubscriptionAmount}</td>
-                                <td>Total</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
 
-                {selectedSubscription && <div className="subscription_table">
-                    <h3>Transaction History</h3>
-                    <thead>
-                        <th>Date</th>
-                        <th>CCY</th>
-                        <th>Amount</th>
-                    </thead>
-                    <table>
-                        <tbody>
-                            {subscriptionTransactionHistory}
-                        </tbody>
-                    </table>
-                </div>}
-                <div className="subscription_table">
-                    <h3>Annual Subscriptions</h3>
-                    <table>
-                        {subscriptionTableHeading}
-                        <tbody>
-                            {renderAnnualSubscriptions}
-                        </tbody>
-                    </table>
-                </div>
+                <div id="main_subscription_page">
+                    <div className="left-column">
+                        <div className="subscription_table">
+                            <h3>Monthly Subscriptions</h3>
+                            <table>
+                                {subscriptionTableHeading}
+                                <tbody>
+                                    {renderMonthlySubscriptions}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td className="subscription_amt_col">{totalMonthlySubscriptionAmount}</td>
+                                        <td>Total</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
 
-                <div className="subscription_table">
 
-                    <h3>Cancelled Subscriptions</h3>
-                    <table>
-                        {subscriptionTableHeading}
-                        <tbody>
-                            {renderCancelledSubscriptions}
-                        </tbody>
-                    </table>
+                        <div className="subscription_table">
+                            <h3>Annual Subscriptions</h3>
+                            <table>
+                                {subscriptionTableHeading}
+                                <tbody>
+                                    {renderAnnualSubscriptions}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div className="subscription_table">
+
+                            <h3>Cancelled Subscriptions</h3>
+                            <table>
+                                {subscriptionTableHeading}
+                                <tbody>
+                                    {renderCancelledSubscriptions}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div className="right-column">
+                        <PieChart subscriptions={subscriptions} />
+                        {selectedSubscription && <div className="subscription_table transaction_history_table">
+                            <h3>Transaction History</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>CCY</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {subscriptionTransactionHistory}
+                                </tbody>
+                            </table>
+                        </div>}
+                    </div>
                 </div>
             </div>
 

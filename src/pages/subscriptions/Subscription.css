@@ -52,6 +52,10 @@ div.subscription_table {
     width: 50em;
 }
 
+div.transaction_history_table {
+    width: 30em;
+}
+
 h3 {
     margin-top: 0;
 }
@@ -108,7 +112,7 @@ canvas {
 }
 
 div#subscription-summary-pie-chart {
-    width: 50em;
+    width: 30em;
     border: 1px solid rgb(210, 210, 210);
     margin: 2em;
     padding: 1em;
