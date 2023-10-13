@@ -1,23 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import {
+    setCurrencyData,
+    setSelectedCurrency,
+    selectCurrency
+} from '../../features/currencySlice';
 import Dropdown from 'react-bootstrap/Dropdown';
 const currencyApiKey = import.meta.env.VITE_CURRENCY_API_KEY;
 const currencyApiURL = `https://api.freecurrencyapi.com/v1/latest?apikey=${currencyApiKey}`;
 
-interface ICurrencyObj {
-    ccy: string
-    rate: number
-}
-
-interface ICurrencyData {
-    [key: string]: number
-}
-
 const Currency = () => {
-    const [selectedCurrency, setSelectedCurrency] = useState<ICurrencyObj>({ ccy: "USD", rate: 1.0 });
-    const [currencyData, setCurrencyData] = useState<ICurrencyData>();
+    const dispatch = useAppDispatch();
+    const currency = useAppSelector(selectCurrency);
+
+    console.log(currency)
 
     const currencies = [
-        "USD", "AUD", "EUR", "GBP", "MXN", "JPY", "HKD", "CAD", "NZD", "RMB"
+        "USD", "AUD", "EUR", "GBP", "MXN", "JPY", "HKD", "CAD", "NZD", "CNY"
     ];
 
     useEffect(() => {
@@ -27,14 +26,18 @@ const Currency = () => {
     const refreshCurrency = async (): Promise<void> => {
         const request = await fetch(currencyApiURL);
         const data = await request.json();
-        setCurrencyData(data.data);
+        if (request.ok) {
+            dispatch(setCurrencyData(data.data));
+        };
     };
 
-    const setCurrency = (currency: string) => {
-        setSelectedCurrency({
-            ccy: currency,
-            rate: currencyData?.currency || 1
-        })
+    const setCurrency = (selectedCCY: string) => {
+        console.log(selectedCCY)
+        dispatch(setSelectedCurrency({
+            ccy: selectedCCY,
+            rate: 1,
+            fx_data: currency.fx_data
+        }))
     };
 
     const renderCurrencyOptions = currencies.map((ccy: string) => {
@@ -46,7 +49,7 @@ const Currency = () => {
     return (
         <Dropdown>
             <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                {selectedCurrency.ccy}
+                {currency.ccy}
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
