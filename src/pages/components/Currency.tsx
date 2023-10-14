@@ -13,8 +13,6 @@ const Currency = () => {
     const dispatch = useAppDispatch();
     const currency = useAppSelector(selectCurrency);
 
-    console.log(currency)
-
     const currencies = [
         "USD", "AUD", "EUR", "GBP", "MXN", "JPY", "HKD", "CAD", "NZD", "CNY"
     ];
@@ -32,12 +30,11 @@ const Currency = () => {
     };
 
     const setCurrency = (selectedCCY: string) => {
-        console.log(selectedCCY)
         dispatch(setSelectedCurrency({
             ccy: selectedCCY,
             rate: 1,
             fx_data: currency.fx_data
-        }))
+        }));
     };
 
     const renderCurrencyOptions = currencies.map((ccy: string) => {
@@ -56,7 +53,7 @@ const Currency = () => {
                 {renderCurrencyOptions}
             </Dropdown.Menu>
         </Dropdown>
-    )
+    );
 };
 
 export default Currency;
