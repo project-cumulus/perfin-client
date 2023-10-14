@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ISubscription, ITransaction } from '../../types';
+import { useAppSelector } from '../../store/hooks';
+import { selectCurrency } from '../../features/currencySlice';
 import "./Subscription.css";
 import NewSubForm from './NewSubForm';
 import PieChart from './PieChart';
@@ -16,6 +18,7 @@ const Subscriptions = () => {
     const handleClose = () => setIsOpen(false);
     const handleOpen = () => setIsOpen(true);
     const handleHideForm = () => setShowNewSubForm(false);
+    const appCurrencyState = useAppSelector(selectCurrency);
 
     useEffect(() => {
         getSubscriptions();
@@ -80,7 +83,11 @@ const Subscriptions = () => {
         })
         .map((sub: ISubscription) => {
             const paymentIconPath = `./src/assets/payments/${sub.payment_method.toLowerCase().replaceAll(" ", "_")}.png`;
-            const { id, subscription_name, amount_per_frequency, frequency, category, company_logo_url } = sub;
+            const { id, subscription_name, currency, amount_per_frequency, frequency, category, company_logo_url } = sub;
+
+            const amountInSelectedCurrency = amount_per_frequency * appCurrencyState.rate * (
+                (currency === "USD") ? 1 : (1 / appCurrencyState.fx_data[currency])
+            )
 
             return (
                 <tr
@@ -91,7 +98,7 @@ const Subscriptions = () => {
                 >
                     <td className="subscription_icon"><img src={company_logo_url} alt={subscription_name} /></td>
                     <td className="subscription_name_col">{subscription_name}</td>
-                    <td className="subscription_amt_col">{amount_per_frequency}</td>
+                    <td className="subscription_amt_col">{amountInSelectedCurrency.toFixed(2)}</td>
                     <td>{frequency}</td>
                     <td>{category}</td>
                     <td className="payment_icon"><img src={paymentIconPath} /></td>
@@ -168,7 +175,12 @@ const Subscriptions = () => {
     );
 
     const totalMonthlySubscriptionAmount = subscriptions?.filter((sub: ISubscription) => sub.active && sub.frequency === "Monthly")
-        .reduce((acc: number, curr: ISubscription) => acc + Number(curr.amount_per_frequency), 0).toFixed(2);
+        .reduce((acc: number, curr: ISubscription) => {
+            const amountInSelectedCurrency = curr.amount_per_frequency * appCurrencyState.rate * (
+                (curr.currency === "USD") ? 1 : (1 / appCurrencyState.fx_data[curr.currency])
+            )
+            return acc + Number(amountInSelectedCurrency);
+        }, 0).toFixed(2);
 
     const subscriptionTransactionHistory = selectedSubscription?.transaction_history.map((transaction: ITransaction, i: number) => {
         const { amount, currency, date_paid } = transaction;
