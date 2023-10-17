@@ -39,3 +39,12 @@ export interface ITransaction {
     isRecurring: boolean
     account_id_id: number
 }
+
+export interface ISecurity {
+    readonly id?: number
+    symbol: string
+    name: string
+    currency: string
+    time_zone: string
+    last_refreshed: string
+}
