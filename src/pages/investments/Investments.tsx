@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { ISecurity } from '../../types/index';
+import PriceChart from './PriceChart';
 const getSecuritiesURL = "http://localhost:8000/cumulus/securities/";
 
 const Investments = () => {
     const [securities, setSecurities] = useState<Array<ISecurity>>([]);
+    const [selectedSecurity, setSelectedSecurity] = useState<ISecurity>();
 
     useEffect(() => {
         getSecurities();
@@ -14,16 +16,17 @@ const Investments = () => {
         if (request.ok) {
             const data = await request.json();
             setSecurities(data);
+            // console.log(data);
         }
     };
 
     const renderSecurities = securities.map((sec: ISecurity, ind: number) => {
         return (
-            <div key={ind}>
-                <h4>{sec.symbol}</h4>
-                <p>{sec.name}</p>
-                <p>{sec.time_zone}</p>
-                <p>{sec.last_refreshed}</p>
+            <div key={ind} onClick={() => setSelectedSecurity(sec)}>
+                <h4>Ticker: {sec.symbol}</h4>
+                <p>Name: {sec.name}</p>
+                <p>Time Zone: {sec.time_zone}</p>
+                <p>Last Refreshed: {sec.last_refreshed}</p>
             </div>
         );
     });
@@ -50,6 +53,8 @@ const Investments = () => {
                     value="Get Data"
                 />
             </form>
+
+            {selectedSecurity && <PriceChart selectedSecurity={selectedSecurity} />}
         </div>
     )
 };

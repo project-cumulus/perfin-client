@@ -40,6 +40,17 @@ export interface ITransaction {
     account_id_id: number
 }
 
+export interface ISecurityPrice {
+    readonly id?: number
+    date: string
+    open: string
+    high: string
+    low: string
+    close: string
+    volume: number
+    readonly security: number
+}
+
 export interface ISecurity {
     readonly id?: number
     symbol: string
@@ -47,4 +58,5 @@ export interface ISecurity {
     currency: string
     time_zone: string
     last_refreshed: string
+    price_history: Array<ISecurityPrice>
 }
