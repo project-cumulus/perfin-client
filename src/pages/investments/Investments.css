@@ -1,0 +1,12 @@
+li.ticker-search-results {
+    display: flex;
+}
+
+li.ticker-search-results:hover {
+    background-color: rgb(212, 211, 211);
+    cursor: pointer;
+}
+
+form.search-ticker-form {
+    display: flex;
+}

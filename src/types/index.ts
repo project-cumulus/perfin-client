@@ -48,7 +48,7 @@ export interface ISecurityPrice {
     low: string
     close: string
     volume: number
-    readonly security: number
+    readonly security?: number
 }
 
 export interface ISecurity {
