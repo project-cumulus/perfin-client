@@ -42,13 +42,13 @@ export interface ITransaction {
 
 export interface ISecurityPrice {
     readonly id?: number
+    security?: number
     date: string
     open: string
     high: string
     low: string
     close: string
     volume: number
-    readonly security: number
 }
 
 export interface ISecurity {
