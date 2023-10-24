@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ISecurity } from '../../types/index';
+import { ISecurity, ISecurityPrice } from '../../types/index';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import PriceChart from './PriceChart';
 import "./Investments.css";
@@ -57,6 +57,7 @@ const Investments = () => {
             <div key={ind} onClick={() => setSelectedSecurity(sec)}>
                 <h5>Ticker: {sec.symbol}</h5>
                 <p>{sec.name} | {sec.time_zone}</p>
+
             </div>
         );
     });
@@ -84,8 +85,63 @@ const Investments = () => {
                 onClick={() => getSecurityData(result)}
             >
                 <p>{result['1. symbol']} - {result['2. name']} ({result['3. type']}) | {result['4. region']} ({result['8. currency']})</p>
+                {selectedSecurity?.symbol === result['1. symbol'] &&
+                    <button
+                        onClick={() => saveToDataBase()}
+                    >Save to Database
+                    </button>}
             </li>);
     });
+
+    const saveToDataBase = async (): Promise<void> => {
+        setIsLoading(true);
+        try {
+            if (!selectedSecurity) {
+                throw new Error("In saveToDatabase: Not Security Selected");
+            };
+            const { name, symbol, currency, time_zone, last_refreshed, price_history } = selectedSecurity;
+            const payload = {
+                name: name,
+                symbol: symbol,
+                currency: currency,
+                time_zone: time_zone,
+                last_refreshed: last_refreshed
+            };
+            const request = await fetch(securitiesURL, {
+                "method": "POST",
+                "headers": { "content-type": "application/json" },
+                "body": JSON.stringify(payload)
+            });
+            if (request.ok) {
+                const data = await request.json();
+                console.log(data);
+                for (const pricePoint of price_history) {
+                    savePriceDataToDB(pricePoint, data.id);
+                };
+            };
+        } catch (error) {
+            console.error(error);
+        };
+        setIsLoading(false);
+    };
+
+    const savePriceDataToDB = async (pricePoint: ISecurityPrice, secID: number): Promise<void> => {
+        pricePoint.security = secID;
+        console.log(pricePoint);
+        try {
+            const request = await fetch(`${securitiesURL}prices/`, {
+                "method": "POST",
+                "headers": { "Content-Type": "application/json" },
+                "body": JSON.stringify(pricePoint)
+            });
+            if (request.ok) {
+                const data = await request.json();
+                console.log(data);
+            }
+        } catch (error) {
+            console.error("Error in pricePoint:", secID, error);
+        };
+    };
 
     const getSecurityData = async (security: ISearchResult): Promise<void> => {
         const getSecurityDataURL = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${security['1. symbol']}&apikey=${API_KEY}`;
