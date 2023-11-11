@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ISecurity, ISecurityPrice } from '../../types/index';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import PriceChart from './PriceChart';
 import "./Investments.css";
 const securitiesURL = "http://localhost:8000/cumulus/securities/";
@@ -8,15 +8,6 @@ const API_KEY = import.meta.env.VITE_ADVANTAGE_API_KEY;
 
 interface ITicker {
     ticker: string
-};
-
-interface ISecurityData {
-    "Meta Data": {
-        [key: string]: string
-    }
-    "Time Series (Daily)": {
-        [key: string]: string
-    }
 };
 
 interface ISearchResult {
@@ -169,7 +160,8 @@ const Investments = () => {
                     currency: security['8. currency'],
                     time_zone: data['Meta Data']['5. Time Zone'],
                     last_refreshed: data['Meta Data']['3. Last Refreshed'],
-                    price_history: Object.entries(data['Time Series (Daily)']).map((priceDataPt) => {
+                    price_history: Object.entries(data['Time Series (Daily)']).map((priceDataPt: [string, any]) => {
+                        console.log(priceDataPt)
                         return {
                             date: priceDataPt[0],
                             open: priceDataPt[1]['1. open'],
@@ -186,32 +178,6 @@ const Investments = () => {
         } catch (error) {
             console.error(error);
         };
-        setIsLoading(false);
-    };
-
-
-    const saveSecurityData = async (securityData: ISecurityData): Promise<void> => {
-        setIsLoading(true);
-        console.log(securityData);
-        const payload = {
-            symbol: securityData['Meta Data']['2. Symbol'],
-            name: "Test Co",
-            time_zone: securityData['Meta Data']['5. Time Zone'],
-            last_refreshed: securityData['Meta Data']['3. Last Refreshed']
-        }
-        try {
-            const request = await fetch(securitiesURL, {
-                method: "POST",
-                headers: { "content-type": "application/json" },
-                body: JSON.stringify(securityData)
-            });
-            const data = await request.json();
-
-            console.log(data);
-
-        } catch (error) {
-            console.error(error);
-        }
         setIsLoading(false);
     };
 
