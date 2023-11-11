@@ -26,8 +26,9 @@ interface ISearchResult {
 const Investments = () => {
     const [securities, setSecurities] = useState<Array<ISecurity>>([]);
     const [selectedSecurity, setSelectedSecurity] = useState<ISecurity | null>();
-    const [searchResult, setSearchResult] = useState<Array<ISearchResult>>();
+    const [searchResult, setSearchResult] = useState<Array<ISearchResult> | null>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [errorMsg, setErrorMsg] = useState<string>("");
 
     const {
         register,
@@ -54,13 +55,21 @@ const Investments = () => {
 
     const renderSecurities = securities.map((sec: ISecurity, ind: number) => {
         return (
-            <div key={ind} onClick={() => setSelectedSecurity(sec)}>
-                <h5>Ticker: {sec.symbol}</h5>
+            <div
+                key={ind}
+                onClick={() => handleSelectSecurity(sec)}
+                className="investment-tile-container"
+            >
+                <h5>{sec.symbol}</h5>
                 <p>{sec.name} | {sec.time_zone}</p>
-
             </div>
         );
     });
+
+    const handleSelectSecurity = (sec: ISecurity): void => {
+        setSelectedSecurity(sec);
+        setSearchResult(null);
+    }
 
     const onSubmit = async (): Promise<void> => {
         const ticker = getValues("ticker");
@@ -70,6 +79,9 @@ const Investments = () => {
         try {
             const request = await fetch(searchTickerURL);
             const data = await request.json();
+            if (data.Information) {
+                setErrorMsg(data.Information);
+            }
             setSearchResult(data.bestMatches);
         } catch (error) {
             console.error(error);
@@ -97,7 +109,7 @@ const Investments = () => {
         setIsLoading(true);
         try {
             if (!selectedSecurity) {
-                throw new Error("In saveToDatabase: Not Security Selected");
+                throw new Error("In saveToDatabase: No Security Selected");
             };
             const { name, symbol, currency, time_zone, last_refreshed, price_history } = selectedSecurity;
             const payload = {
@@ -114,7 +126,6 @@ const Investments = () => {
             });
             if (request.ok) {
                 const data = await request.json();
-                console.log(data);
                 for (const pricePoint of price_history) {
                     savePriceDataToDB(pricePoint, data.id);
                 };
@@ -122,12 +133,12 @@ const Investments = () => {
         } catch (error) {
             console.error(error);
         };
+        getSecurities();
         setIsLoading(false);
     };
 
     const savePriceDataToDB = async (pricePoint: ISecurityPrice, secID: number): Promise<void> => {
         pricePoint.security = secID;
-        console.log(pricePoint);
         try {
             const request = await fetch(`${securitiesURL}prices/`, {
                 "method": "POST",
@@ -144,7 +155,7 @@ const Investments = () => {
     };
 
     const getSecurityData = async (security: ISearchResult): Promise<void> => {
-        const getSecurityDataURL = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${security['1. symbol']}&apikey=${API_KEY}`;
+        const getSecurityDataURL = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${security['1. symbol']}&apikey=${API_KEY}&outputsize=full`;
         setIsLoading(true);
 
         try {
@@ -205,40 +216,53 @@ const Investments = () => {
     };
 
     return (
-        <div>
-            <h3>Investments</h3>
-            <div>
+        <div className="investment-main-page">
+
+            <div className="investment-col-left">
+                <h3>My Watchlist</h3>
                 <ul>
                     {renderSecurities}
                 </ul>
             </div>
 
-            <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="search-ticker-form"
-            >
-                <label htmlFor="ticker">Ticker</label>
-                <input
-                    {...register("ticker", { required: true })}
-                    type="text"
-                    placeholder="Search.."
-                    autoComplete="off"
-                />
-                <input
-                    type="submit"
-                    value="Search"
-                />
-            </form>
-            {errors.ticker && <span>This field is required</span>}
-            {isLoading &&
-                <div className="d-flex justify-content-center">
-                    <div className="spinner-border" role="status">
-                        <span className="sr-only"></span>
-                    </div>
-                </div>}
+            <div className="investment-col-right">
 
-            {renderSearchResults && <ul>{renderSearchResults}</ul>}
-            {selectedSecurity && <PriceChart selectedSecurity={selectedSecurity} />}
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="search-ticker-form"
+                >
+                    <label htmlFor="ticker">🔎</label>
+
+                    <input
+                        {...register("ticker", { required: true })}
+                        type="text"
+                        placeholder="Search.."
+                        autoComplete="off"
+                    />
+                    <input
+                        type="submit"
+                        value="Search"
+                        className="search-ticker-submit"
+                    />
+                </form>
+                <div className="search-ticker-form">
+                    {errors.ticker && <span>This field is required</span>}
+                    {errorMsg && <span>{errorMsg}</span>}
+                </div>
+
+                {isLoading &&
+                    <div className="d-flex justify-content-center">
+                        <div className="spinner-border" role="status">
+                            <span className="sr-only"></span>
+                        </div>
+                    </div>}
+
+                {renderSearchResults && <ul className="ticker-search-result-list">{renderSearchResults}</ul>}
+                {selectedSecurity && <PriceChart selectedSecurity={selectedSecurity} />}
+
+            </div>
+
+
         </div>
     )
 };

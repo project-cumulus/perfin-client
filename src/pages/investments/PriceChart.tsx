@@ -40,20 +40,27 @@ const PriceChart = ({ selectedSecurity }: Props) => {
             },
         },
     };
-    const labels = price_history.slice(0, 100)
-        .reverse()
+    const labels = price_history.slice(-252)
         .map(priceData => {
             return priceData.date;
         });
+
+    const priceData = price_history.slice(-252).map(priceData => priceData.close);
+    let color = 'rgb(90,90,90)';
+    if (Number(priceData[0]) < Number(priceData[priceData.length - 1])) {
+        color = 'rgb(50, 200, 90)' // green
+    } else {
+        color = 'rgb(255, 60, 50)' // red
+    }
 
     const data = {
         labels,
         datasets: [
             {
                 label: 'Close',
-                data: price_history.slice(0, 100).reverse().map(priceData => priceData.close),
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                data: priceData,
+                borderColor: color,
+                backgroundColor: color,
             },
         ],
     };

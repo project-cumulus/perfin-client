@@ -1,0 +1,13 @@
+td,
+tr {
+    text-align: end;
+}
+
+td.acc-value {
+    min-width: 7em;
+}
+
+td.account-name {
+    min-width: 15em;
+    text-align: left;
+}
