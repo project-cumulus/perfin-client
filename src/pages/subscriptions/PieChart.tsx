@@ -1,5 +1,5 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 import { ISubscription } from '../../types';
 import "./Subscription.css";
 
@@ -61,7 +61,7 @@ const PieChart = ({ subscriptions }: Props) => {
     return (
         <div id="subscription-summary-pie-chart">
             <h3>Monthly Cost by Category</h3>
-            <Pie data={data} />
+            <Doughnut data={data} />
         </div>
     )
 }
